@@ -22,22 +22,6 @@ if not api_key:
 MODEL_ID = "gemini-2.5-pro" 
 client = genai.Client(api_key=api_key)
 
-# Prompt dynamique pour s'adapter à la langue
-SYSTEM_PROMPT = (
-    "Analyse le fichier audio fourni. "
-    "1. Détecte la langue principale parlée dans l'audio. "
-    "2. Rédige l'INTÉGRALITÉ de ta réponse (y compris les titres des sections) dans cette même langue. "
-    "3. Structure ta réponse ainsi : "
-    "   - Un titre signifiant 'Transcription' dans la langue détectée, suivi d'un séparateur, puis du texte transcrit"
-    "   - Un titre signifiant 'Résumé' dans la langue détectée, puis un séparateur. "
-    "     Résume le contenu de manière logique et articulée. "
-    "   - Un titre signifiant 'Nuances' dans la langue détectée. suivi d'un séparateur"
-    "     Challenge l'idée présentée en t'appuyant sur la littérature scientifique."
-    "     CRITÈRE DE STYLE : Adapte ton niveau de vocabulaire et d'élocution à celui entendu dans l'audio. "
-    "     CRITÈRE DE FORME : Ne mentionne jamais 'l'orateur', 'l'utilisateur' ou 'la personne'. Énonce les idées et faits directement. "
-    "     Cite les sources scientifiques consensuelles qui appuient le contenu. "
-)
-
 # Prompt dynamique amélioré pour un affichage ergonomique
 SYSTEM_PROMPT = """
 Tu es un analyste expert doté d'une capacité de synthèse et de mise en forme impeccable.
@@ -134,6 +118,7 @@ if final_audio_bytes:
 
             except Exception as e:
                 st.error(f"Une erreur est survenue : {e}")
+
 
 
 
