@@ -26,11 +26,11 @@ MODEL_ID = "gemini-2.5-flash"
 client = genai.Client(api_key=api_key)
 
 SYSTEM_PROMPT = (
-    "Ecoute ce fichier audio et transcris le sous une partie intitulée "Transcription""
-    "Puis, après avoir placé un séparateur et un titre "Résumé", résume le contenu du fichier audio sans commentaire sur l'interlocuteur,"
+    "Ecoute ce fichier audio et transcris le sous une partie intitulée 'Transcription'"
+    "Puis, après avoir placé un séparateur et un titre 'Summary', résume le contenu du fichier audio sans commentaire sur l'interlocuteur,"
     "en le structurant de manière logique et en citant les sources scientifiques qui font consensus "
     "qui appuient le contenu de la note. Reste concis pour pouvoir lire rapidement. "
-    "Ajoute également une partie nommée "Nuance" où tu challenges l'idée selon la littérature scientifique également."
+    "Ajoute également une partie nommée 'Nuances' où tu challenges l'idée selon la littérature scientifique également."
 )
 
 # --- INTERFACE UTILISATEUR ---
@@ -83,4 +83,5 @@ if audio_value:
 
 # Footer discret
 st.markdown("---")
+
 st.caption("Propulsé par Google Gemini 2.5 Flash & Streamlit")
