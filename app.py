@@ -26,11 +26,17 @@ MODEL_ID = "gemini-2.5-flash"
 client = genai.Client(api_key=api_key)
 
 SYSTEM_PROMPT = (
-    "Ecoute ce fichier audio et transcris le sous une partie intitulée 'Transcription'"
-    "Puis, après avoir placé un séparateur et un titre 'Summary', résume le contenu du fichier audio sans commentaire sur l'interlocuteur,"
-    "en le structurant de manière logique et en citant les sources scientifiques qui font consensus "
-    "qui appuient le contenu de la note. Reste concis pour pouvoir lire rapidement. "
-    "Ajoute également une partie nommée 'Nuances' où tu challenges l'idée selon la littérature scientifique également."
+    "Analyse le fichier audio fourni. "
+    "1. Détecte la langue principale parlée dans l'audio. "
+    "2. Rédige l'INTÉGRALITÉ de ta réponse (y compris les titres des sections) dans cette même langue. "
+    "3. Structure ta réponse ainsi : "
+    "   - Un titre signifiant 'Transcription' dans la langue détectée, suivi du texte transcrit. "
+    "   - Un séparateur. "
+    "   - Un titre signifiant 'Résumé' (ex: 'Summary' si anglais, 'Resumen' si espagnol) dans la langue détectée. "
+    "     Résume le contenu de manière logique, concise, en citant les sources scientifiques consensuelles. "
+    "   - Un titre signifiant 'Nuances' dans la langue détectée. "
+    "     Challenge l'idée présentée en t'appuyant sur la littérature scientifique."
+    " L'ensemble de ce que tu as produit doit refléter le niveau d'élocution de l'utilisateur"
 )
 
 # --- INTERFACE UTILISATEUR ---
@@ -85,3 +91,4 @@ if audio_value:
 st.markdown("---")
 
 st.caption("Propulsé par Google Gemini 2.5 Flash & Streamlit")
+
