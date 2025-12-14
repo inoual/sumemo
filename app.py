@@ -19,7 +19,7 @@ if not api_key:
     st.stop()
 
 # --- CONFIGURATION GEMINI ---
-MODEL_ID = "gemini-2.5-pro" 
+MODEL_ID = "gemini-2.5-flash" 
 client = genai.Client(api_key=api_key)
 
 # Prompt dynamique pour s'adapter à la langue
@@ -100,6 +100,7 @@ if final_audio_bytes:
 
             except Exception as e:
                 st.error(f"Une erreur est survenue : {e}")
+
 
 
 
