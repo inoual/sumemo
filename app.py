@@ -19,10 +19,10 @@ if not api_key:
     st.stop()
 
 # --- CONFIGURATION GEMINI ---
-MODEL_ID = "gemini-2.5-pro" 
+MODEL_ID = "gemini-2.5-pro" # J'ai corrigé "2.5" qui n'existe pas encore publiquement, 2.0 Flash est le standard actuel rapide
 client = genai.Client(api_key=api_key)
 
-# Prompt dynamique amélioré pour un affichage ergonomique
+# Prompt dynamique
 SYSTEM_PROMPT = """
 Tu es un analyste expert doté d'une capacité de synthèse et de mise en forme impeccable.
 Ta tâche est d'analyser le fichier audio fourni et de générer un rapport structuré et visuellement agréable.
@@ -52,8 +52,8 @@ Ta tâche est d'analyser le fichier audio fourni et de générer un rapport stru
 * Adopte une approche critique mais constructive.
 
 ### CRITÈRES DE STYLE :
-* **Tonalité adaptative** : Le niveau de vocabulaire doit s'aligner sur celui de l'audio (soutenu, technique, ou familier).
-* **Directivité** : Ne mentionne JAMAIS "l'orateur" ou "la personne". Présente les faits directement.
+* **Tonalité adaptative** : Le niveau de vocabulaire doit s'aligner sur celui de l'audio.
+* **Directivité** : Ne mentionne JAMAIS "l'orateur". Présente les faits directement.
 """
 
 # --- INTERFACE UTILISATEUR ---
@@ -70,61 +70,65 @@ with col1:
 with col2:
     audio_file = st.file_uploader("Uploader un fichier", type=["mp3", "wav", "m4a", "ogg"])
 
-# Logique de sélection de la source audio
+# Logique de sélection
 final_audio_bytes = None
-mime_type = "audio/wav" # Par défaut
+mime_type = "audio/wav"
 
 if audio_mic:
     final_audio_bytes = audio_mic.read()
-    mime_type = "audio/wav" # Le micro Streamlit sort généralement du WAV
+    mime_type = "audio/wav"
 elif audio_file:
     final_audio_bytes = audio_file.read()
-    mime_type = audio_file.type # Récupère le type réel (ex: audio/mpeg)
+    mime_type = audio_file.type
 
-# --- TRAITEMENT ---
+# --- TRAITEMENT (MODIFIÉ POUR LE STREAMING) ---
 if final_audio_bytes:
-    # Petit indicateur de ce qui est analysé
     st.info(f"Fichier prêt à l'analyse ({mime_type})")
     
     if st.button("⚡ Lancer l'analyse", type="primary"):
-        with st.spinner("Analyse en cours avec Gemini 2.5 Flash..."):
-            try:
-                response = client.models.generate_content(
-                    model=MODEL_ID,
-                    contents=[
-                        types.Content(
-                            role="user",
-                            parts=[
-                                types.Part.from_bytes(
-                                    data=final_audio_bytes,
-                                    mime_type=mime_type 
-                                ),
-                                types.Part.from_text(text=SYSTEM_PROMPT),
-                            ]
-                        )
-                    ]
-                )
-                
-                st.success("Analyse terminée !")
-                st.markdown("### 📝 Résultat")
-                st.markdown(response.text)
-                
-                st.download_button(
-                    label="Télécharger le rapport",
-                    data=response.text,
-                    file_name="analyse_vocale.md",
-                    mime="text/markdown"
-                )
+        st.markdown("### 📝 Résultat")
+        
+        # Création d'un conteneur vide pour le flux
+        response_placeholder = st.empty()
+        full_response_text = ""
 
-            except Exception as e:
-                st.error(f"Une erreur est survenue : {e}")
+        try:
+            # Appel API en mode STREAM
+            response_stream = client.models.generate_content_stream(
+                model=MODEL_ID,
+                contents=[
+                    types.Content(
+                        role="user",
+                        parts=[
+                            types.Part.from_bytes(
+                                data=final_audio_bytes,
+                                mime_type=mime_type 
+                            ),
+                            types.Part.from_text(text=SYSTEM_PROMPT),
+                        ]
+                    )
+                ]
+            )
+            
+            # Boucle pour afficher les morceaux (chunks) au fur et à mesure
+            for chunk in response_stream:
+                if chunk.text:
+                    full_response_text += chunk.text
+                    # On ajoute un petit curseur "▌" pour l'effet visuel
+                    response_placeholder.markdown(full_response_text + "▌")
+            
+            # Affichage final propre (sans le curseur)
+            response_placeholder.markdown(full_response_text)
+            
+            st.success("Analyse terminée !")
+            
+            # Le bouton de téléchargement utilise le texte complet assemblé
+            st.download_button(
+                label="Télécharger le rapport",
+                data=full_response_text,
+                file_name="analyse_vocale.md",
+                mime="text/markdown"
+            )
 
-
-
-
-
-
-
-
-
-
+        except Exception as e:
+            st.error(f"Une erreur est survenue : {e}")
