@@ -31,7 +31,7 @@ SYSTEM_PROMPT = (
     "   - Un titre signifiant 'Transcription' dans la langue détectée, suivi du texte transcrit. "
     "   - Un séparateur. "
     "   - Un titre signifiant 'Résumé' dans la langue détectée. "
-    "   - Un séparateur
+    "   - Un séparateur "
     "     Résume le contenu de manière logique et concise. "
     "     CRITÈRE DE STYLE : Adapte ton niveau de vocabulaire et d'élocution à celui entendu dans l'audio. "
     "     CRITÈRE DE FORME : Ne mentionne jamais 'l'orateur', 'l'utilisateur' ou 'la personne'. Énonce les idées et faits directement. "
@@ -102,5 +102,6 @@ if final_audio_bytes:
 
             except Exception as e:
                 st.error(f"Une erreur est survenue : {e}")
+
 
 
