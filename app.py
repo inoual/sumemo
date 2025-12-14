@@ -30,7 +30,7 @@ SYSTEM_PROMPT = (
     "3. Structure ta réponse ainsi : "
     "   - Un titre signifiant 'Transcription' dans la langue détectée, suivi d'un séparateur, puis du texte transcrit"
     "   - Un titre signifiant 'Résumé' dans la langue détectée, puis un séparateur. "
-    "     Résume le contenu de manière logique et concise. "
+    "     Résume le contenu de manière logique et articulée. "
     "   - Un titre signifiant 'Nuances' dans la langue détectée. suivi d'un séparateur"
     "     Challenge l'idée présentée en t'appuyant sur la littérature scientifique."
     "     CRITÈRE DE STYLE : Adapte ton niveau de vocabulaire et d'élocution à celui entendu dans l'audio. "
@@ -100,6 +100,7 @@ if final_audio_bytes:
 
             except Exception as e:
                 st.error(f"Une erreur est survenue : {e}")
+
 
 
 
