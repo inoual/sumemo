@@ -19,7 +19,7 @@ if not api_key:
     st.stop()
 
 # --- CONFIGURATION GEMINI ---
-MODEL_ID = "gemini-2.5-pro" # J'ai corrigé "2.5" qui n'existe pas encore publiquement, 2.0 Flash est le standard actuel rapide
+MODEL_ID = "gemini-2.5-flash" # J'ai corrigé "2.5" qui n'existe pas encore publiquement, 2.0 Flash est le standard actuel rapide
 client = genai.Client(api_key=api_key)
 
 # Prompt dynamique
@@ -132,3 +132,4 @@ if final_audio_bytes:
 
         except Exception as e:
             st.error(f"Une erreur est survenue : {e}")
+
